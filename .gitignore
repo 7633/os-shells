@@ -1,0 +1,6 @@
+# ignore pdf file with book
+/resources
+# ignore *.exe
+*.exe
+# ignore unuseful files
+*.txt~

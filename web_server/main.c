@@ -40,6 +40,7 @@ int main(int argc, char* argv[]){
 	char buf[BUFSIZ] = {0};
 	
 	while(1){
+		// accept clients
 		s_client = accept(s_server, NULL, NULL);
 		if(s_client == -1)
 			handle_error("[server] accept client");
@@ -47,10 +48,12 @@ int main(int argc, char* argv[]){
 		sprintf(buf, "[info] data successfully writed into file\n");
 		write(s_client, buf, sizeof(buf));
 
+		// fork process
 		proc_id = fork();
 		if(proc_id > 0){
 		}		
 		else{
+			// process client in child process
 			FILE* fclient;
 			char file[20] = {0};
 			sprintf(file, "./client%d", s_client);
@@ -59,13 +62,15 @@ int main(int argc, char* argv[]){
 				char bufr[BUFSIZ] = {0};
 				int nbytes = read(s_client, bufr, BUFSIZ);
 				
+				// '/close' for close connection
 				if(strcmp(bufr, "/close\n") == 0){
 					sprintf(bufr, "[info] data successfully writed to file, connection closed\n");
 					write(s_client, bufr, sizeof(bufr));
 					printf("[server] closing connection\n");
 					break;
 				}
-				else 
+				else
+				   	// '/read' for read information from user file
 					if(strcmp(bufr, "/read\n") == 0){
 						fseek(fclient, 0L, SEEK_SET);
 						int nread;
